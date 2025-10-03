@@ -1,0 +1,22 @@
+{
+  "name": "practica-de-clase",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000p\u0000r\u0000a\u0000c\u0000t\u0000i\u0000c\u0000a\u0000-\u0000d\u0000e\u0000-\u0000c\u0000l\u0000a\u0000s\u0000e\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "playwright": "^1.55.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "allure-playwright": "^3.4.1"
+  }
+}
