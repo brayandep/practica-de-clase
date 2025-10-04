@@ -1,1 +1,7 @@
 /node_modules
+allure-report
+playwright-report
+test-results
+package-lock.json
+.last-run.json
+
