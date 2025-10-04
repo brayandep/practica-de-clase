@@ -1,4 +1,4 @@
-require('dotenv').config();
+/*require('dotenv').config();
 const { test, expect } = require('@playwright/test');
 const fetch = require('node-fetch');
 
@@ -17,3 +17,4 @@ async function makeApiRequest(endpoint, method = 'GET', body = null) {
   });
   return response.json();
 }
+*/

@@ -1,28 +1,25 @@
-require('dotenv').config();
-const { test, expect } = require('@playwright/test');
-const fetch = require('node-fetch');
+// tests/fixtures/space.fixture.js
+const { test: base } = require('@playwright/test');
+const { createSpace } = require('../../src/services/clickup/spaces.service');
 
-const API_URL = process.env.BASE_URL;
-const TOKEN = process.env.TOKEN;
-const WORKSPACE = process.env.WORKSPACE;
+const LOG_NS = '[space-fixture]';
+const ts = () => new Date().toISOString();
 
-test.beforeAll(async () => {
-  // Opcionalmente puedes verificar el estado de la API aquí
+exports.test = base.extend({
+  space: async ({ request }, use, testInfo) => {
+    let spaceId = null;
+    await testInfo.step('Setup: crear Space temporal', async () => {
+      const res = await createSpace(request, process.env.CLICKUP_TEAM_ID, {
+        name: `SP_TEST_${Date.now()}`
+      });
+      if (res.status() !== 200) {
+        throw new Error(`Falló la creación del Space: ${res.status()} ${await res.text()}`);
+      }
+      const body = await res.json();
+      spaceId = body.id;
+      console.log(`${ts()} ${LOG_NS} Space creado`, { spaceId });
+      await use({ id: spaceId, name: body.name });
+    });
+    // ❌ Sin teardown, el test se encarga de eliminar
+  }
 });
-
-test.afterAll(async () => {
-  // Aquí puedes hacer el teardown (limpieza) si es necesario, por ejemplo, eliminar tareas creadas.
-});
-
-async function makeApiRequest(endpoint, method = 'GET', body = null) {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    method,
-    headers: {
-      'Authorization': TOKEN,
-      'Content-Type': 'application/json'
-    },
-    body: body ? JSON.stringify(body) : null,
-  });
-
-  return response.json();
-}

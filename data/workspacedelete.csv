@@ -1,0 +1,5 @@
+type,caseId,name,expectedStatus,reason
+valid,TD001,SP_DELETE_OK_{{ts}},200,crear OK y eliminar
+invalid,TD002,"",400,name requerido
+invalid,TD003,"espacio con espacios",400,name inválido (no slug)
+invalid,TD004,"@@@###",400,name caracteres inválidos
