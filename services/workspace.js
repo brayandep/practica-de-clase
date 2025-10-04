@@ -24,3 +24,8 @@ exports.deleteSpace = (request, spaceId) =>
   request.delete(`${BASE}/space/${spaceId}`, {
     headers: auth()
   });
+
+exports.authlessDelete = (request, spaceId) =>
+    request.delete(`${BASE}/space/${spaceId}`, {
+      headers: { 'Content-Type': 'application/json' } // sin Authorization
+    });
