@@ -1,0 +1,70 @@
+# .github/workflows/ci_pipeline.yml
+
+# Nombre que aparecerá en la pestaña 'Actions' de GitHub
+name: Playwright CI/CD Pipeline
+
+# Define cuándo se ejecutará el flujo de trabajo
+on:
+  push:
+    branches: [ development, main ] # Se ejecuta cuando hay un push en estas ramas
+  pull_request:
+    branches: [ development, main ] # Se ejecuta cuando se crea un Pull Request
+  workflow_dispatch: # Permite la ejecución manual desde la interfaz de GitHub
+
+# Define los 'jobs' (tareas) que se ejecutarán
+jobs:
+  test_suite:
+    runs-on: ubuntu-latest # Usaremos una máquina virtual Linux (Ubuntu)
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4 # 1. Obtiene el código del repositorio
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # 2. Instala la versión de Node.js necesaria
+
+      - name: Install Dependencies
+        run: npm install # 3. Instala todas las dependencias (Playwright, allure-playwright, dotenv)
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps # 4. Descarga los navegadores necesarios (Chromium, Firefox, WebKit)
+
+      # ------------------------------------------------------------
+      # PASO CLAVE: Autenticación API con Secretos de GitHub
+      # ------------------------------------------------------------
+      - name: Configure API Secrets
+        run: |
+          # Crea el archivo .env temporalmente en el CI con el secreto de GitHub
+          echo "CLICKUP_API_TOKEN=${{ secrets.CLICKUP_API_TOKEN }}" > .env
+        env:
+          # Carga el secreto que debes configurar en GitHub (ver Sección 3)
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+
+      # ------------------------------------------------------------
+      # EJECUCIÓN Y REPORTE
+      # ------------------------------------------------------------
+      - name: Run Playwright Tests & Generate Allure Results
+        # Ejecuta todos los tests (UI y API) y usa el reportero Allure
+        run: npx playwright test --reporter=line,allure-playwright
+
+      - name: Upload Allure Results Artifact
+        uses: actions/upload-artifact@v4
+        if: always() # Sube los resultados incluso si los tests fallan
+        with:
+          name: allure-results
+          path: allure-results
+
+      # ------------------------------------------------------------
+      # PUBLICACIÓN DEL REPORTE FINAL (Requisito: Reportes Integrados)
+      # ------------------------------------------------------------
+      - name: Deploy Allure Report to GitHub Pages
+        uses: simple-elf/allure-report-action@v1.7
+        if: always()
+        with:
+          allure_results: allure-results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # URL donde el reporte será visible (ajusta la URL si es necesario)
+          allure_server_url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure/
+          report_history: allure-history
