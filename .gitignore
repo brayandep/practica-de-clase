@@ -1,4 +1,5 @@
 /node_modules
+<<<<<<< HEAD
 
 # Playwright
 node_modules/
@@ -7,3 +8,11 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+=======
+allure-report
+playwright-report
+test-results
+package-lock.json
+.last-run.json
+
+>>>>>>> fcc03ed28f2124b125051051f489ed684430e51e
