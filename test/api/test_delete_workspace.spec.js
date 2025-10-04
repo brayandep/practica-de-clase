@@ -46,7 +46,7 @@ test.describe('ClickUp API – Eliminar Space (sin CSV)', () => {
     if (!space) test.skip('No se pudo crear Space para la prueba.');
 
     const resNoToken = await authlessDelete(request, space.id);
-    await expectNoAuthOAUTH017(resNoToken, [400, 401]); // encapsula el check de 400/401 + ECODE
+    await expectNoAuthOAUTH017(resNoToken, [400, 401]); 
 
     // cleanup para no dejar datos
     const resCleanup = await deleteSpace(request, space.id);
