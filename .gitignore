@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /node_modules
 <<<<<<< HEAD
 
@@ -16,3 +17,17 @@ package-lock.json
 .last-run.json
 
 >>>>>>> fcc03ed28f2124b125051051f489ed684430e51e
+=======
+.env
+.env*
+/venv/
+/.venv/
+.env
+/playwright-report/
+/test-results/
+/reports/
+/node_modules/
+/playwright-report/index.html
+/test-results/.last-run.json
+/allure-results/
+>>>>>>> d3ca9a70b3cf1c613a9f97708cebd9db2383be8c

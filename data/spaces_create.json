@@ -1,0 +1,6 @@
+[
+  { "dataType": "valid",   "caseId": "TD001", "name": "Prueba automatizada by red flags",  "expectedStatus": 200, "reason": "crear OK" },
+  { "dataType": "invalid", "caseId": "TD002", "name": "",                     "expectedStatus": 400, "reason": "name requerido" },
+  { "dataType": "valid",   "caseId": "TD003", "name": "                       ", "expectedStatus": 400, "reason": "la API permite espacios" },
+  { "dataType": "valid",   "caseId": "TD004", "name": "@@@###",               "expectedStatus": 400, "reason": "la API permite símbolos" }
+]

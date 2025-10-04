@@ -2,7 +2,7 @@ const { defineConfig } = require('@playwright/test');
 require('dotenv').config();
 
 module.exports = defineConfig({
-  testDir: './test/api',  // Asegúrate de que la ruta esté correcta para tu proyecto
+  testDir: './test',  // Asegúrate de que la ruta esté correcta para tu proyecto
   reporter: [['list'], ['html'], ['allure-playwright']],
   use: {
     baseURL: process.env.API_BASE || 'https://api.clickup.com/api/v2/',  // Asegúrate de que se use la URL de ClickUp

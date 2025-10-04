@@ -1,28 +1,17 @@
 require('dotenv').config();
-const { test, expect } = require('@playwright/test');
-const fetch = require('node-fetch');
+const { test: base } = require('@playwright/test');
+const { createSpace } = require('./services/workspace');
 
-const API_URL = process.env.BASE_URL;
-const TOKEN = process.env.TOKEN;
-const WORKSPACE = process.env.WORKSPACE;
+exports.test = base.extend({
+  space: async ({ request }, use) => {
+    // Setup: crear Space temporal
+    const rCreate = await createSpace(request, { name: `SP_TEST_${Date.now()}` });
+    if (rCreate.status() !== 200) {
+      throw new Error(`Falló creación Space: ${rCreate.status()} ${await rCreate.text()}`);
+    }
+    const body = await rCreate.json();
 
-test.beforeAll(async () => {
-  // Opcionalmente puedes verificar el estado de la API aquí
+    // Entregar el recurso al test (el test es quien elimina)
+    await use({ id: body.id, name: body.name });
+  },
 });
-
-test.afterAll(async () => {
-  // Aquí puedes hacer el teardown (limpieza) si es necesario, por ejemplo, eliminar tareas creadas.
-});
-
-async function makeApiRequest(endpoint, method = 'GET', body = null) {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    method,
-    headers: {
-      'Authorization': TOKEN,
-      'Content-Type': 'application/json'
-    },
-    body: body ? JSON.stringify(body) : null,
-  });
-
-  return response.json();
-}
